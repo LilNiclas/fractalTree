@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas width="600" height="300"></canvas>
+<script>
+    let cx = document.querySelector("canvas").getContext("2d"); //Creates variable cx and assigns 2d rendering context of a canvas in HTML. Allows you to draw on the canvas
+
+    function randomColor() { //generates random RGB color with Math.random between 0-255. Math.floor rounds down to the nearest integer, math.random takes integers.
+        const red = Math.floor(Math.random() * 256);
+        const green = Math.floor(Math.random() * 256);
+        const blue = Math.floor(Math.random() * 256);
+        return `rgb(${red},${green},${blue})`;
+    }
+    function branch(length, angle, scale) {
+        debugger
+        cx.fillStyle = randomColor()
+        cx.fillRect(0, 0, 2, length); //Fills a rectangle on the canvas
+        if(length<8) return //if lenght of branch is less than 8, function returns stopping recursion
+        cx.save() //Saves the current canvas
+        cx.translate(0, length) //'translates' the current drawing position to the end of the line/branch
+        cx.rotate(-angle) //Rotates the canvas by specified angle, so branch will be drawn with a slight angle. Counterclockwise
+        branch(length*scale, angle, scale) //calls the 'branch' function with increasingly shorter lenght, but same angle and scale. Draws a line/branch
+        cx.rotate(2*angle) //Rotates the canvas clockwise by twice the specifed angle. First back to the start canvas, then angled clockwise, to draw a line with a slight angle
+        branch(length*scale, angle, scale) //calls the 'branch' function with increasingly shorter lenght, but same angle and scale. Draws a line/branch
+        cx.restore() //Restores the canvas to the previously saved state, undoing rotation and translation
+
+    }
+    cx.translate(300, 0) //Moves/translates the canvas to a starting position before calling the 'branch' function to draw the tree
+    branch(60, 0.5, 0.8) //calls branch method to draw the fractal tree. 60 = lenght of line. 0.5 = angle of the branch. 0.8 = scaling the every branch/line to be 0.8 times smaller than the previous one
+</script>
+</body>
+</html>
